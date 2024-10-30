@@ -34,17 +34,29 @@ import java.util.List;
  */
 public class Server {
 
+    /////////////////
+    // Constants
+    ////////////////
+
     private static final int TCP_PORT = 54321;
     private static final int UDP_PORT = 54322;
 
-    // Map to track client IDs and their network information
+    /////////////////
+    // Variables
+    ////////////////
+
     private static final List<Client> clients = new ArrayList<>();
     private static int clientNum = 0;
+
+    /////////////////
+    // Main
+    ////////////////
 
     public static void main(String[] args) {
         // Start UDP listener for real-time updates in a separate thread
         new Thread(Server::startUDPListener).start();
 
+        // Get new clients using TCP
         try (ServerSocket serverSocket = new ServerSocket(TCP_PORT)) {
             System.out.println("Server started on port '" + TCP_PORT + "'. Waiting for clients...");
 
@@ -60,11 +72,10 @@ public class Server {
                     clientNum++;
 
                     // Store client info (name and address) in the map
-                    // clients.put(clientId, clientSocket.getInetAddress());
                     clients.add(new Client(clientId, clientName, clientSocket.getInetAddress()));
                     System.out.println("Assigned Client ID " + clientId + " to " + clientName);
 
-                    // Send client ID and UDP port back to the client
+                    // Send assigned client ID and UDP port back to the client
                     out.writeInt(clientId);
                     out.writeInt(UDP_PORT);
                     out.flush();
@@ -78,6 +89,10 @@ public class Server {
         }
     }
 
+    /**
+     * Starts listening for client data on the UDP port.
+     * 
+     */
     private static void startUDPListener() {
         try (DatagramSocket udpSocket = new DatagramSocket(UDP_PORT)) {
             byte[] buffer = new byte[1024];
@@ -108,6 +123,10 @@ public class Server {
         }
     }
 
+    /////////////////
+    // Helper methods
+    ////////////////
+
     private static Client getClient(int id) {
         for (Client c : clients) {
             if (c.getId() == id) {
@@ -116,6 +135,10 @@ public class Server {
         }
         return null;
     }
+
+    /////////////////
+    // Client class
+    ////////////////
 
     @SuppressWarnings("unused")
     private static class Client {
