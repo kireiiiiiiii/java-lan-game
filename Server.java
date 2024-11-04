@@ -1,26 +1,6 @@
 /*
  * Author: Matěj Šťastný
  * Date created: 10/28/2024
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
  */
 
 import java.io.*;
@@ -71,7 +51,7 @@ public class Server {
                     int clientId = clientNum;
                     clientNum++;
 
-                    // Store client info (name and address) in the map
+                    // Store client info (name and address) in the list
                     clients.add(new Client(clientId, clientName, clientSocket.getInetAddress()));
                     System.out.println("Assigned Client ID " + clientId + " to " + clientName);
 
